@@ -110,13 +110,14 @@ jobs:
              export route_plugins=$(cat global-config/acl.yaml)
              echo $plugins
              cd api/Apiconfig
-             cat ../../kong.yaml | yq '.services.[] += env(plugins)' -o yaml | yq '.services[].routes.[].plugins +=env(route_plugins)' -o yaml > kong-student-api.yaml
+             cat ../../kong.yaml | yq '.services.[] += env(plugin)' -o yaml | yq '.services[].routes.[].plugins +=env(route_plugins)' -o yaml > kong-student-api.yaml
              # cat new-api.yaml | yq '.services.[] += env(plugin)' -o yaml > modified-api.yaml
           fi
 
       - name: Set headers and run deck sync
         run: |
           cd api/Apiconfig
+          cp ../../plugins.yaml . # cop the plugins file to the spec directory
           #cat kong-student-api.yaml
           
           # deck file openapi2kong -s test.yaml --select-tag=dev -o kong.yaml
