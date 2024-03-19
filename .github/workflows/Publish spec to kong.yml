@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       student_api_repo_name:
-        description: 'Student API repository name'
+        description: 'API repository name'
         required: true
       # plugin_repo_name:
       #   description: 'Plugin reposistory name'
