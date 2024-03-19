@@ -85,11 +85,11 @@ jobs:
 
           sudo cp /tmp/deck /usr/local/bin/
 
-          deck file openapi2kong -s api/student-api/Student_v0.4.yml --select-tag=dev -o kong.yaml
+          deck file openapi2kong -s api/Apiconfig/Student_v0.4.yml --select-tag=dev -o kong.yaml
 
       - name: check if file exists
         run: |
-          if [ -f "api/student-api/kong-student-api.yaml" ]; then
+          if [ -f "api/Apiconfig/kong-student-api.yaml" ]; then
             echo "File already exits."
             echo "confirmation=true" >> $GITHUB_ENV
           else
@@ -104,19 +104,19 @@ jobs:
           "true" ] ]; then
              sed -i '1,2d' global-config/request-size-limiting.yaml  global-config/oas-validation.yaml global-config/open-id.yaml global-config/acl.yaml
              sed -i '1d' global-config/ratelimiting.yaml
-             cat  global-config/ratelimiting.yaml global-config/request-size-limiting.yaml global-config/oas-validation.yaml global-config/open-id.yaml > combined-plugins.yaml
-             #  cat combined-plugins.yaml
-             export plugins=$(cat combined-plugins.yaml)
+             cat  global-config/ratelimiting.yaml global-config/request-size-limiting.yaml global-config/oas-validation.yaml global-config/open-id.yaml > plugins.yaml
+             #  cat plugins.yaml
+             export plugin=$(cat plugins.yaml)
              export route_plugins=$(cat global-config/acl.yaml)
              echo $plugins
-             cd api/student-api
+             cd api/Apiconfig
              cat ../../kong.yaml | yq '.services.[] += env(plugins)' -o yaml | yq '.services[].routes.[].plugins +=env(route_plugins)' -o yaml > kong-student-api.yaml
-             # cat new-api.yaml | yq '.services.[] += env(plugins)' -o yaml > modified-api.yaml
+             # cat new-api.yaml | yq '.services.[] += env(plugin)' -o yaml > modified-api.yaml
           fi
 
       - name: Set headers and run deck sync
         run: |
-          cd api/student-api
+          cd api/Apiconfig
           #cat kong-student-api.yaml
           
           # deck file openapi2kong -s test.yaml --select-tag=dev -o kong.yaml
@@ -126,14 +126,14 @@ jobs:
     
       - name: Configuring Git
         run: |  
-            cd api/student-api           
+            cd api/Apiconfig           
             git config --local user.email "action@github.com"
             git config --local user.name "Github Action"
 
       - name: Commit and Push Changes if file not exist
         if: env.confirmation == 'false' 
         run: |
-          cd api/student-api
+          cd api/Apiconfig
           git add .
           git commit -m "Update kong file"
           git push origin main  
@@ -141,7 +141,7 @@ jobs:
       - name: Check branch status and Overwriting exiting files  
         if: env.confirmation == 'true'
         run: |
-          cd api/student-api
+          cd api/Apiconfig
           BRANCH_STATUS=$(git status --porcelain)
 
           # Check if the message contains nothing
@@ -309,7 +309,7 @@ jobs:
         run: |
           echo "API PRODUCT ID: $API_PRODUCT_ID"
           echo "API Product Version ID: $API_Product_Version_ID"
-          encoded_spec=$(base64 -w 0 student-api/Student_v0.4.yml)
+          encoded_spec=$(base64 -w 0 Apiconfig/Student_v0.4.yml)
           echo $encoded_spec
           curl --location --request POST "${{ vars.ADMIN_API_URL }}/api-products/$API_PRODUCT_ID/product-versions/$API_Product_Version_ID/specifications" \
             --header 'Authorization: ${{ secrets.PIPELINE_TOKEN }}' \
