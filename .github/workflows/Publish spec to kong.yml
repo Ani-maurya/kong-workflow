@@ -9,9 +9,17 @@ on:
       student_api_repo_name:
         description: 'Student API repository name'
         required: true
-      plugin_repo_name:
-        description: 'Plugin reposistory name'
+      # plugin_repo_name:
+      #   description: 'Plugin reposistory name'
+      #   required: true
+      environment:
+        description: 'The environment to deploy to'
         required: true
+        default: 'dev'
+        type: choice
+        options: 
+          - prod
+          - test
 
 jobs:
   OAS_TO_Kong:
@@ -20,7 +28,13 @@ jobs:
       - name: Checkout Code from global config
         uses: actions/checkout@v2
         with:
-          repository: 'Ani-maurya/${{ github.event.inputs.plugin_repo_name }}'
+          repository: ${{ if eq(github.event.inputs.environment, 'dev') }} 
+                          'Ani-maurya/integration-global-kong-configuration'
+                      ${{ else if eq(github.event.inputs.environment, 'prod') }}
+                          'Ani-maurya/staging_repo_name'
+                      ${{ else }}
+                          'Ani-maurya/default_repo_name'
+                      ${{ endif }}
           ref: 'main'
           token: ${{ secrets.PAT }}
           path: global-config
