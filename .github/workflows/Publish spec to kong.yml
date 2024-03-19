@@ -17,8 +17,8 @@ on:
         required: true
         default: 'dev'
         type: choice
-        options:
-          - dev 
+        options: 
+          - dev
           - prod
           - test
 
@@ -26,21 +26,34 @@ jobs:
   OAS_TO_Kong:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code from global config
+      - name: Checkout Code from api config
+        if: ${{ github.event.inputs.environment == 'dev'}}
         uses: actions/checkout@v2
         with:
-          repository: ${{ if eq(github.event.inputs.environment, 'dev') }} 
-                          'Ani-maurya/integration-global-kong-configuration'
-                      ${{ else if eq(github.event.inputs.environment, 'prod') }}
-                          'Ani-maurya/staging_repo_name'
-                      ${{ else }}
-                          'Ani-maurya/default_repo_name'
-                      ${{ endif }}
+          repository: 'Ani-maurya/integration-global-kong-configuration'
           ref: 'main'
           token: ${{ secrets.PAT }}
           path: global-config
+      
+      - name: Checkout Code from api config
+        if: ${{ github.event.inputs.environment == 'prod'}}
+        uses: actions/checkout@v2
+        with:
+          repository: 'Ani-maurya/integration-prod-global-kong-configuration'
+          ref: 'main'
+          token: ${{ secrets.PAT }}
+          path: global-config
+      
+      - name: Checkout Code from api config
+        if: ${{ github.event.inputs.environment == 'test'}}
+        uses: actions/checkout@v2
+        with:
+          repository: 'Ani-maurya/integration-test-global-kong-configuration'
+          ref: 'main'
+          token: ${{ secrets.PAT }}
+          path: global-config    
 
-      - name: Checkout Code from student api
+      - name: Checkout Code from API repo
         uses: actions/checkout@v2
         with:
           repository: 'Ani-maurya/${{ github.event.inputs.student_api_repo_name }}'
