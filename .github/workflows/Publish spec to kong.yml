@@ -184,7 +184,7 @@ jobs:
 
       - name: Find spec file name in the directory
         run: |
-          cd api/Apiconfig
+          cd Apiconfig
           YAML_FILE=$(ls -p | grep -v /)
           echo "FILE=$YAML_FILE" >> $GITHUB_ENV
 
