@@ -112,8 +112,8 @@ jobs:
           "true" ] ]; then
              cd global-config/kong-global-config
              # for global level plugin
-             sed -i '1,2d' request-size-limiting.yaml http-log.yaml ip-restriction.yaml key-auth.yaml rate-limiting.yaml
-             sed -i '1d' correlation.yaml
+             sed -i '1,2d' request-size-limiting.yaml http-log.yaml ip-restriction.yaml key-auth.yaml rate-limiting.yaml correlation.yaml
+            #  sed -i '1d' correlation.yaml
              cat correlation.yaml rate-limiting.yaml request-size-limiting.yaml http-log.yaml ip-restriction.yaml key-auth.yaml  > global-plugins.yaml
              export global_plugins=$(cat global-plugins.yaml)
 
