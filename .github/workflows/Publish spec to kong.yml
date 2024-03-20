@@ -81,15 +81,15 @@ jobs:
         run: |
           cd api/Apiconfig
           YAML_FILE=$(ls -p | grep -v /)
-          echo "YAML_FILE=$YAML_FILE" >> GITHUB_ENV
-          echo "$YAML_FILE"
+          echo "FILE=$YAML_FILE" >> GITHUB_ENV
+          echo "$FILE"
           
       - name: Install deck CLI
         run: |       
           curl -sL https://github.com/kong/deck/releases/download/v1.34.0/deck_1.34.0_linux_amd64.tar.gz -o deck.tar.gz
           tar -xf deck.tar.gz -C /tmp 
           sudo cp /tmp/deck /usr/local/bin/
-          echo "YAML_FILE: ${{ env.YAML_FILE }}"
+          echo "YAML_FILE: ${{ env.FILE }}"
 
 
       - name: Run command to generate Kong config
