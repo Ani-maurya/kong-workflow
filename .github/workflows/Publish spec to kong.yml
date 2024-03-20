@@ -93,6 +93,7 @@ jobs:
       - name: Run command to generate Kong config
         run: |
           deck file openapi2kong -s api/Apiconfig/${{ env.FILE }} --select-tag=dev -o kong.yaml
+          cat kong.yaml
 
       - name: check kong file exists or not
         run: |
