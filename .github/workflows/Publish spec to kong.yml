@@ -77,6 +77,11 @@ jobs:
           sudo snap install yq
           yq --version
 
+      - name: Find spec file name in the directory
+        run: |
+          YAMLFILE=$(ls -1t api/Apiconfig/*.yml | head -n1)
+          echo "YAML_FILE=$YAML_FILE" >> GITHUB_ENV
+          
       - name: Install deck CLI
         run: |       
           curl -sL https://github.com/kong/deck/releases/download/v1.34.0/deck_1.34.0_linux_amd64.tar.gz -o deck.tar.gz
@@ -85,9 +90,11 @@ jobs:
 
           sudo cp /tmp/deck /usr/local/bin/
 
-          deck file openapi2kong -s api/Apiconfig/Student_v0.4.yml --select-tag=dev -o kong.yaml
 
-      - name: check if file exists
+      - name: Run command to generate Kong config
+              deck file openapi2kong -s api ${{ env.YAML_FILE }} --select-tag=dev -o kong.yaml
+
+      - name: check kong file exists or not
         run: |
           if [ -f "api/Apiconfig/kong-student-api.yaml" ]; then
             echo "File already exits."
