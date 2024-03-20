@@ -129,7 +129,7 @@ jobs:
           
           # deck file openapi2kong -s test.yaml --select-tag=dev -o kong.yaml
 
-          deck gateway sync  --select-tag dev Kong-${{ env.FILE }}.yaml --konnect-token ${{ secrets.DECK_TOKEN }} --konnect-control-plane-name ${{ vars.CONTROL_PLANE_NAME }}
+          deck gateway sync  --select-tag dev Kong-${{ env.file_without_extention }}.yaml --konnect-token ${{ secrets.DECK_TOKEN }} --konnect-control-plane-name ${{ vars.CONTROL_PLANE_NAME }}
 
     
       - name: Configuring Git
