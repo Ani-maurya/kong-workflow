@@ -82,9 +82,9 @@ jobs:
         run: |
           cd api/Apiconfig
           YAML_FILE=$(ls -p | grep -v /)
-          # echo "FILE=$YAML_FILE" >> GITHUB_ENV
-          echo "::set-output name=YAML_FILE::$YAML_FILE"
-          echo "$YAML_FILE"
+          echo "FILE=${{ YAML_FILE }}" >> GITHUB_ENV
+          # echo "::set-output name=YAML_FILE::$YAML_FILE"
+          echo "$FILE"
       
       - name: Use YAML_FILE
         run: |
