@@ -81,7 +81,7 @@ jobs:
         run: |
           cd api/Apiconfig
           YAML_FILE=$(ls -p | grep -v /)
-          echo "FILE=${{ YAML_FILE }}" >> GITHUB_ENV
+          echo "FILE=$YAML_FILE" >> $GITHUB_ENV
           echo "$FILE"
           
       - name: Install deck CLI
