@@ -81,6 +81,9 @@ jobs:
         run: |
           cd api/Apiconfig
           YAML_FILE=$(ls -p | grep -v /)
+          file_without_extention="${YAML_FILE%.*}"
+          echo "$file_without_extention"
+          exit 1
           echo "FILE=$YAML_FILE" >> $GITHUB_ENV # setting the  github environment variable name as file value pick fomr YAML_File and use this in the subsquesnt steps 
           
       - name: Install deck CLI
