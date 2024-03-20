@@ -81,9 +81,7 @@ jobs:
         run: |
           cd api/Apiconfig
           YAML_FILE=$(ls -p | grep -v /)
-          file_without_extention="${YAML_FILE%.*}"
-          echo "$file_without_extention"
-          exit 1
+          echo "file_without_extention=${YAML_FILE%.*}" >> $GITHUB_ENV
           echo "FILE=$YAML_FILE" >> $GITHUB_ENV # setting the  github environment variable name as file value pick fomr YAML_File and use this in the subsquesnt steps 
           
       - name: Install deck CLI
@@ -98,7 +96,7 @@ jobs:
 
       - name: check kong file exists or not
         run: |
-          if [ -f "api/Apiconfig/Kongconfig/Kong-${{ env.FILE }}.yaml" ]; then
+          if [ -f "api/Apiconfig/Kongconfig/Kong-${{ env.file_without_extention }}.yaml" ]; then
             echo "File already exits."
             echo "confirmation=true" >> $GITHUB_ENV
           else
@@ -119,7 +117,7 @@ jobs:
              export route_plugins=$(cat global-config/acl.yaml)
              echo $plugins
              cd api/Apiconfig/Kongconfig
-             cat ../../../kong.yaml | yq '.services.[] += env(plugin)' -o yaml | yq '.services[].routes.[].plugins +=env(route_plugins)' -o yaml > Kong-${{ env.FILE }}.yaml
+             cat ../../../kong.yaml | yq '.services.[] += env(plugin)' -o yaml | yq '.services[].routes.[].plugins +=env(route_plugins)' -o yaml > Kong-${{ env.file_without_extention }}.yaml
              # cat new-api.yaml | yq '.services.[] += env(plugin)' -o yaml > modified-api.yaml
           fi
 
