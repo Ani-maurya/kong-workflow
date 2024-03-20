@@ -82,6 +82,7 @@ jobs:
           cd api/Apiconfig
           YAMLFILE=$(ls -1tr | head -n1)
           echo "YAML_FILE=$YAML_FILE" >> GITHUB_ENV
+          echo "$YAML_FILE"
           
       - name: Install deck CLI
         run: |       
@@ -94,6 +95,7 @@ jobs:
 
       - name: Run command to generate Kong config
         run: |
+          echo 
           deck file openapi2kong -s ${{ env.YAML_FILE }} --select-tag=dev -o kong.yaml
 
       - name: check kong file exists or not
