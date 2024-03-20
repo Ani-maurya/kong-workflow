@@ -140,7 +140,7 @@ jobs:
       - name: Commit and Push Changes if file not exist
         if: env.confirmation == 'false' 
         run: |
-          api/Apiconfig/Kongconfig
+          cd api/Apiconfig/Kongconfig
           git add .
           git commit -m "Update Kong config and plugins file"
           git push origin main  
