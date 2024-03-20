@@ -78,11 +78,17 @@ jobs:
           yq --version
 
       - name: Find spec file name in the directory
+        id: find_yaml
         run: |
           cd api/Apiconfig
           YAML_FILE=$(ls -p | grep -v /)
-          echo "FILE=$YAML_FILE" >> GITHUB_ENV
+          # echo "FILE=$YAML_FILE" >> GITHUB_ENV
+          echo "::set-output name=YAML_FILE::$YAML_FILE"
           echo "$YAML_FILE"
+      
+      - name: Use YAML_FILE
+        run: |
+          echo "YAML_FILE value: ${{ steps.find_yaml.outputs.YAML_FILE }}"
           
       - name: Install deck CLI
         run: |       
