@@ -79,7 +79,8 @@ jobs:
 
       - name: Find spec file name in the directory
         run: |
-          YAMLFILE=$(ls -1t api/Apiconfig/*.yml | head -n1)
+          cd api/Apiconfig
+          YAMLFILE=$(ls -1tr | head -n1)
           echo "YAML_FILE=$YAML_FILE" >> GITHUB_ENV
           
       - name: Install deck CLI
@@ -93,7 +94,7 @@ jobs:
 
       - name: Run command to generate Kong config
         run: |
-          deck file openapi2kong -s api ${{ env.YAML_FILE }} --select-tag=dev -o kong.yaml
+          deck file openapi2kong -s ${{ env.YAML_FILE }} --select-tag=dev -o kong.yaml
 
       - name: check kong file exists or not
         run: |
@@ -183,6 +184,12 @@ jobs:
           echo "CONTROL_PLANE_NAME: ${{ vars.CONTROL_PLANE_NAME }}" 
           echo "GATEWAY_SERVICE_NAME: ${{ vars.GATEWAY_SERVICE_NAME }}"
           echo "API_PRODUCT_ALREADY_EXISTS=false" >> $GITHUB_ENV
+
+      - name: Find spec file name in the directory
+        run: |
+          cd Apiconfig
+          YAMLFILE=$(ls -1tr | head -n1)
+          echo "YAML_FILE=$YAML_FILE" >> GITHUB_ENV
 
       - name: Check API Product is already exist or not or Creating new API product
         run: |
@@ -318,7 +325,7 @@ jobs:
         run: |
           echo "API PRODUCT ID: $API_PRODUCT_ID"
           echo "API Product Version ID: $API_Product_Version_ID"
-          encoded_spec=$(base64 -w 0 Apiconfig/Student_v0.4.yml)
+          encoded_spec=$(base64 -w 0 Apiconfig/${{ env.YAML_FILE }})
           echo $encoded_spec
           curl --location --request POST "${{ vars.ADMIN_API_URL }}/api-products/$API_PRODUCT_ID/product-versions/$API_Product_Version_ID/specifications" \
             --header 'Authorization: ${{ secrets.PIPELINE_TOKEN }}' \
