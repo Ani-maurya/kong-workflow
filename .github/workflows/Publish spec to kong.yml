@@ -80,7 +80,7 @@ jobs:
       - name: Find spec file name in the directory
         run: |
           cd api/Apiconfig
-          ls -1t -r
+          ls -1t | tac
           YAML_FILE=$(ls -1t -r | head -n1)
           echo "YAML_FILE=$YAML_FILE" >> GITHUB_ENV
           echo "$YAML_FILE"
