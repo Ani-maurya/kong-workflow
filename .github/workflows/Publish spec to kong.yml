@@ -80,7 +80,7 @@ jobs:
       - name: Find spec file name in the directory
         run: |
           cd api/Apiconfig
-          YAMLFILE=$(ls -1tr | head -n1)
+          YAML_FILE=$(ls -1tr | head -n1)
           echo "YAML_FILE=$YAML_FILE" >> GITHUB_ENV
           echo "$YAML_FILE"
           
@@ -190,7 +190,7 @@ jobs:
       - name: Find spec file name in the directory
         run: |
           cd Apiconfig
-          YAMLFILE=$(ls -1tr | head -n1)
+          YAML_FILE=$(ls -1tr | head -n1)
           echo "YAML_FILE=$YAML_FILE" >> GITHUB_ENV
 
       - name: Check API Product is already exist or not or Creating new API product
