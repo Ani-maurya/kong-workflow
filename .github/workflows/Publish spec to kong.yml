@@ -89,10 +89,12 @@ jobs:
           curl -sL https://github.com/kong/deck/releases/download/v1.34.0/deck_1.34.0_linux_amd64.tar.gz -o deck.tar.gz
           tar -xf deck.tar.gz -C /tmp 
           sudo cp /tmp/deck /usr/local/bin/
+          echo "YAML_FILE: ${{ env.YAML_FILE }}"
 
 
       - name: Run command to generate Kong config
         run: |
+          echo "YAML_FILE: ${{ env.YAML_FILE }}"
           FILE_NAME= "{{ env.YAML_FILE }}"
           deck file openapi2kong -s $FILE_NAME --select-tag=dev -o kong.yaml
 
