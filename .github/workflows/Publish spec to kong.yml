@@ -71,6 +71,7 @@ jobs:
         run: |
           sudo apt install jq -y
           jq --version
+          echo "Aniket"
 
       - name: download yq
         run: |
