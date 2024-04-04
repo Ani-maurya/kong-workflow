@@ -1,5 +1,5 @@
 ---
-name: Publish Spec to Kong
+name: publish Spec to Kong
 on:
   # push:
   #   branches:
