@@ -24,11 +24,7 @@ on:
       select_branch:
         description: Choose the branch name where you want checkout the code
         required: true
-        default: 'main'
-        type: choice
-        options:
-          - main
-          - feature
+        default: 'feature'
 
 jobs:
   OAS_TO_Kong:
