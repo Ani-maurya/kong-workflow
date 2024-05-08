@@ -22,7 +22,7 @@ on:
           - prod
           - test
       select_branch:
-        description: Choose the branch name where you want checkout the code
+        description: Choose the branch name where you want to checkout the code
         required: true
         default: 'feature'
 
