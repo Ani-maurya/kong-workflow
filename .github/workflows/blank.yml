@@ -172,7 +172,7 @@ jobs:
           cd api/Apiconfig/Kongconfig
           git add .
           git commit -m "Update Kong config and plugins file"
-          git push origin main  
+          git push origin ${{ github.event.inputs.select_branch }}  
       
       - name: Check branch status and Overwriting exiting files  
         if: env.confirmation == 'true'
@@ -188,7 +188,7 @@ jobs:
           echo "Branch needs further processing. Continue with remaining steps."
           git add .
           git commit -m "Update Kong config and plugins file"
-          git push origin main
+          git push origin ${{ github.event.inputs.select_branch }}
           fi     
           
   publish-customer-api-to-portal:
