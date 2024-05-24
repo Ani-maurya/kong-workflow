@@ -6,6 +6,8 @@ jobs:
     steps:
       - name: Checkou repository
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT }}
 
       - name: download yq
         run: |
