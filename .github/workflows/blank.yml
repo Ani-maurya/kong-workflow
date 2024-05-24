@@ -1,5 +1,5 @@
 name: publish Spec to Kong
-on: [push, pull_request]
+on: [push]
 jobs:
   OAS_TO_Kong:
     runs-on: ubuntu-latest
@@ -12,37 +12,7 @@ jobs:
           sudo snap install yq
           yq --version
           
-      - name: see files
-        run: ls -al
-    
-      - name: Configuring Git
-        run: |  
-            cd api/Apiconfig/Kongconfig           
-            git config --local user.email "action@github.com"
-            git config --local user.name "Github Action"
-
-      # - name: Commit and Push Changes if file not exist
-      #   if: env.confirmation == 'false' 
-      #   run: |
-      #     cd api/Apiconfig/Kongconfig
-      #     git add .
-      #     git commit -m "Update Kong config and plugins file"
-      #     git push origin ${{ github.event.inputs.select_branch }}  
-      
-      # - name: Check branch status and Overwriting exiting files  
-      #   if: env.confirmation == 'true'
-      #   run: |
-      #     cd api/Apiconfig/Kongconfig
-      #     BRANCH_STATUS=$(git status --porcelain)
-
-      #     # Check if the message contains nothing
-      #     if [[ -z "$BRANCH_STATUS" ]]; then
-      #       echo "Branch is up to date. Skipping remaining steps."
-      #       exit 0
-      #     else
-      #     echo "Branch needs further processing. Continue with remaining steps."
-      #     git add .
-      #     git commit -m "Update Kong config and plugins file"
-      #     git push origin ${{ github.event.inputs.select_branch }}
-      #     fi     
-          
+      - name: append the value in the kong config file
+        run: |
+          yq -i '.services[].plugins[] |= (select(.name == "request-transformer") | .config.replace.headers |= [{"Authorization": "Authorization: ${{ secrets.BASIC_AUTH }}"}])' kong-config.yaml
+          cat kong-config.yaml
