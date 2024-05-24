@@ -14,5 +14,5 @@ jobs:
           
       - name: append the value in the kong config file
         run: |
-          yq -i '.services[].plugins[] |= (select(.name == "request-transformer") | .config.replace.headers[0] = "Authorization: ${{ secrets.BASIC_AUTH }}")' kong-config.yaml
+          yq eval -i '.services[].plugins[] |= (select(.name == "request-transformer") | .config.replace.headers[0] = "Authorization: ${{ secrets.BASIC_AUTH }}")' kong-config.yaml
           cat kong-config.yaml 
