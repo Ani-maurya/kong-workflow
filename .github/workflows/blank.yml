@@ -15,4 +15,12 @@ jobs:
       - name: append the value in the kong config file
         run: |
           yq eval -i '.services[].plugins[] |= (select(.name == "request-transformer") | .config.replace.headers[0] = "Authorization: ${{ secrets.BASIC_AUTH }}")' kong-config.yaml
-          cat kong-config.yaml 
+          cat kong-config.yaml
+          
+      - name: Configuring Git
+        run: |            
+            git config --local user.email "action@github.com"
+            git config --local user.name "Github Action"
+            git add kong-config.yaml
+            git commit -m "update kong.yaml fiele"
+            git push
