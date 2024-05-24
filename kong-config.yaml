@@ -502,7 +502,8 @@ services:
         querystring: []
       replace:
         body: []
-        headers: []
+        headers:
+            - 'Authrorization: REPLACE'
         querystring: []
         uri: null
     enabled: true
