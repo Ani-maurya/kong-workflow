@@ -1,4 +1,4 @@
-name: publish Spec to Kong
+name: publish Spec to Kong 
 on: [push]
 jobs:
   OAS_TO_Kong:
