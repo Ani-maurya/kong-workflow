@@ -133,12 +133,12 @@ jobs:
              cat Kong-${{ env.file_without_extention }}.yaml
           fi
 
-      # - name: Set headers and run deck sync
-      #   run: |
-      #     cd api/Apiconfig/Kongconfig
-      #     cp ../../../plugins.yaml . # copy the plugins file to the Kongconfig directory
-      #     #cat kong-student-api.yaml
+      - name: Set headers and run deck sync
+        run: |
+          cd api/Apiconfig/Kongconfig
+          cp ../../../plugins.yaml . # copy the plugins file to the Kongconfig directory
+          #cat kong-student-api.yaml
           
-      #     # deck file openapi2kong -s test.yaml --select-tag=dev -o kong.yaml
+          # deck file openapi2kong -s test.yaml --select-tag=dev -o kong.yaml
 
-      #     deck gateway sync  --select-tag dev Kong-${{ env.file_without_extention }}.yaml --konnect-token ${{ secrets.DECK_TOKEN }} --konnect-control-plane-name ${{ vars.CONTROL_PLANE_NAME }}
+          deck gateway sync  --select-tag dev Kong-${{ env.file_without_extention }}.yaml --konnect-token ${{ secrets.DECK_TOKEN }} --konnect-control-plane-name ${{ vars.CONTROL_PLANE_NAME }}
