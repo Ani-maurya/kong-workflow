@@ -95,7 +95,7 @@ jobs:
         run: |
           export FILE_CONTENT=$(cat api/Apiconfig/${{ env.FILE }})
           echo $FILE_CONTENT
-          yq -i eval '.plugins[0].config.api_spec = env(FILE_CONTENT)' - o yaml > global-config/oas-validation.yaml
+          yq -i eval '.plugins[0].config.api_spec = env(FILE_CONTENT)' - o yaml global-config/oas-validation.yaml
           cat global-config/oas-validation.yaml
 
       - name: Append Plugins to new-api.yaml
