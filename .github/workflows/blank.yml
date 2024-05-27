@@ -93,9 +93,11 @@ jobs:
 
       - name: API Spec update to the OAS yaml file
         run: |
-          export FILE_CONTENT=$(cat api/Apiconfig/${{ env.FILE }} |  sed ':a;N;$!ba;s/\n/\\n/g')
-          echo "$FILE_CONTENT"
-          yq -i ".plugins[0].config.api_spec = \"$FILE_CONTENT\"" global-config/oas-validation.yaml
+          FILE_CONTENT= api/Apiconfig/${{ env.FILE }}
+          ORIGINAL_CONTENT=$(cat $FILE_CONTENT)
+          ENCODED_CONTENT=$(echo -n "$ORIGINAL_CONTENT" | jq -s -R -r @uri)
+          echo "$ENCODED_CONTENT" > $SPEC_FILE
+          yq -i ".plugins[0].config.api_spec = \"$SPEC_FILE\"" global-config/oas-validation.yaml
           cat global-config/oas-validation.yaml
 
       - name: Append Plugins to new-api.yaml
