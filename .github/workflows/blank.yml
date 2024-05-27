@@ -93,8 +93,7 @@ jobs:
 
       - name: API Spec update to the OAS yaml file
         run: |
-          FILE_CONTENT= "api/Apiconfig/${{ env.FILE }}"
-          ORIGINAL_CONTENT=$(cat $FILE_CONTENT)
+          ORIGINAL_CONTENT=$(cat api/Apiconfig/${{ env.FILE }})
           ENCODED_CONTENT=$(echo -n "$ORIGINAL_CONTENT" | jq -s -R -r @uri)
           echo "$ENCODED_CONTENT" > $SPEC_FILE
           yq -i ".plugins[0].config.api_spec = \"$SPEC_FILE\"" global-config/oas-validation.yaml
