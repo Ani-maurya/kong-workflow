@@ -93,54 +93,54 @@ jobs:
 
       - name: API Spec update to the OAS yaml file
         run: |
-          cat api/Apiconfig/${{ env.FILE }}
-          # export ORIGINAL_CONTENT=$(api/Apiconfig/${{ env.FILE }})
+          export FILE_CONTENT=$(cat api/Apiconfig/${{ env.FILE }})
+          echo $FILE_CONTENT
           # ENCODED_CONTENT=$(echo -n "$ORIGINAL_CONTENT" | jq -s -R -r @uri)
           # echo "$ENCODED_CONTENT" > $SPEC_FILE
-          yq -i ".plugins[0].config.api_spec = \"$SPEC_FILE\"" global-config/oas-validation.yaml
-          cat global-config/oas-validation.yaml
+          # yq -i ".plugins[0].config.api_spec = \"$SPEC_FILE\"" global-config/oas-validation.yaml
+          # cat global-config/oas-validation.yaml
 
-      - name: Append Plugins to new-api.yaml
-        run: |
+      # - name: Append Plugins to new-api.yaml
+      #   run: |
           
-          if [ "${{ vars.RATE_LIMITING }}" == "true"  || [ "${{ vars.REQUEST_SIZE_LIMITING }}" == "true" ] || [ "${{ vars.ACL }}" == "true" ] || "${{ vars.OAS_VALIDATION }}" == "true" ] || [ "${{ vars.OPENID_CONNECT }}" ==
-          "true" ] ]; then
-             cd global-config/kong-global-config
-             # for global level plugin
-             sed -i '1,2d' request-size-limiting.yaml http-log.yaml ip-restriction.yaml key-auth.yaml rate-limiting.yaml correlation.yaml
-            #  sed -i '1d' correlation.yaml
-             cat correlation.yaml rate-limiting.yaml request-size-limiting.yaml http-log.yaml ip-restriction.yaml key-auth.yaml  > global-plugins.yaml
-             export global_plugins=$(cat global-plugins.yaml)
+      #     if [ "${{ vars.RATE_LIMITING }}" == "true"  || [ "${{ vars.REQUEST_SIZE_LIMITING }}" == "true" ] || [ "${{ vars.ACL }}" == "true" ] || "${{ vars.OAS_VALIDATION }}" == "true" ] || [ "${{ vars.OPENID_CONNECT }}" ==
+      #     "true" ] ]; then
+      #        cd global-config/kong-global-config
+      #        # for global level plugin
+      #        sed -i '1,2d' request-size-limiting.yaml http-log.yaml ip-restriction.yaml key-auth.yaml rate-limiting.yaml correlation.yaml
+      #       #  sed -i '1d' correlation.yaml
+      #        cat correlation.yaml rate-limiting.yaml request-size-limiting.yaml http-log.yaml ip-restriction.yaml key-auth.yaml  > global-plugins.yaml
+      #        export global_plugins=$(cat global-plugins.yaml)
 
-             cd ../..
-             # for service level and route level plugin plugin 
-             sed -i '1,2d' global-config/request-size-limiting.yaml  global-config/oas-validation.yaml global-config/open-id.yaml global-config/acl.yaml
-             sed -i '1d' global-config/ratelimiting.yaml
+      #        cd ../..
+      #        # for service level and route level plugin plugin 
+      #        sed -i '1,2d' global-config/request-size-limiting.yaml  global-config/oas-validation.yaml global-config/open-id.yaml global-config/acl.yaml
+      #        sed -i '1d' global-config/ratelimiting.yaml
              
-              # concatenate the service level plugin
-             cat  global-config/ratelimiting.yaml global-config/request-size-limiting.yaml global-config/oas-validation.yaml global-config/open-id.yaml > plugins.yaml
-             # \\cat plugins.yaml
-             export plugin=$(cat plugins.yaml)
+      #         # concatenate the service level plugin
+      #        cat  global-config/ratelimiting.yaml global-config/request-size-limiting.yaml global-config/oas-validation.yaml global-config/open-id.yaml > plugins.yaml
+      #        # \\cat plugins.yaml
+      #        export plugin=$(cat plugins.yaml)
 
-             # export the route level plugin
-             export route_plugins=$(cat global-config/acl.yaml)
+      #        # export the route level plugin
+      #        export route_plugins=$(cat global-config/acl.yaml)
 
-            #  echo $plugins
-             cd api/Apiconfig/Kongconfig
+      #       #  echo $plugins
+      #        cd api/Apiconfig/Kongconfig
 
-             # append the plugin to kong file route and service level
+      #        # append the plugin to kong file route and service level
              
-             cat ../../../kong.yaml | yq '.plugins += env(global_plugins)' -o yaml | yq '.services.[] += env(plugin)' -o yaml | yq '.services[].routes.[].plugins +=env(route_plugins)' -o yaml > Kong-${{ env.file_without_extention }}.yaml
-             # cat new-api.yaml | yq '.services.[] += env(plugin)' -o yaml > modified-api.yaml
-             cat Kong-${{ env.file_without_extention }}.yaml
-          fi
+      #        cat ../../../kong.yaml | yq '.plugins += env(global_plugins)' -o yaml | yq '.services.[] += env(plugin)' -o yaml | yq '.services[].routes.[].plugins +=env(route_plugins)' -o yaml > Kong-${{ env.file_without_extention }}.yaml
+      #        # cat new-api.yaml | yq '.services.[] += env(plugin)' -o yaml > modified-api.yaml
+      #        cat Kong-${{ env.file_without_extention }}.yaml
+      #     fi
 
-      - name: Set headers and run deck sync
-        run: |
-          cd api/Apiconfig/Kongconfig
-          cp ../../../plugins.yaml . # copy the plugins file to the Kongconfig directory
-          #cat kong-student-api.yaml
+      # - name: Set headers and run deck sync
+      #   run: |
+      #     cd api/Apiconfig/Kongconfig
+      #     cp ../../../plugins.yaml . # copy the plugins file to the Kongconfig directory
+      #     #cat kong-student-api.yaml
           
-          # deck file openapi2kong -s test.yaml --select-tag=dev -o kong.yaml
+      #     # deck file openapi2kong -s test.yaml --select-tag=dev -o kong.yaml
 
-          deck gateway sync  --select-tag dev Kong-${{ env.file_without_extention }}.yaml --konnect-token ${{ secrets.DECK_TOKEN }} --konnect-control-plane-name ${{ vars.CONTROL_PLANE_NAME }}
+      #     deck gateway sync  --select-tag dev Kong-${{ env.file_without_extention }}.yaml --konnect-token ${{ secrets.DECK_TOKEN }} --konnect-control-plane-name ${{ vars.CONTROL_PLANE_NAME }}
