@@ -93,7 +93,7 @@ jobs:
 
       - name: API Spec update to the OAS yaml file
         run: |
-          FILE_CONTENT= api/Apiconfig/${{ env.FILE }}
+          FILE_CONTENT= "api/Apiconfig/${{ env.FILE }}"
           ORIGINAL_CONTENT=$(cat $FILE_CONTENT)
           ENCODED_CONTENT=$(echo -n "$ORIGINAL_CONTENT" | jq -s -R -r @uri)
           echo "$ENCODED_CONTENT" > $SPEC_FILE
